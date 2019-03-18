@@ -1,0 +1,9 @@
+.app-container {
+  margin: auto;
+  margin-top: 2em;
+  max-width: 64em;
+}
+
+.text-center {
+  text-align: center;
+}

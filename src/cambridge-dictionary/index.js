@@ -8,8 +8,8 @@ export function parseSenseHTML(html) {
     const $entry = $(entry);
     return {
       pos: $entry.find('.posgram').text(),
-      ipa_uk: $entry.find('.uk .ipa').text(),
-      ipa_us: $entry.find('.us .ipa').text(),
+      ipaUK: $entry.find('.uk .ipa').text(),
+      ipaUS: $entry.find('.us .ipa').text(),
       senses: $entry.find('.sense-block').map((j, sense) => {
         const $sense = $(sense);
         return {
@@ -32,6 +32,18 @@ export function parseSenseHTML(html) {
       }).get(),
     };
   }).get();
+}
+
+export function parseSuggestionsHTML(html) {
+  const $ = cheerio.load(html);
+
+  return {
+    hasExact: $('ul.unstyled.prefix-block.a--b.a--rev').length === 1,
+    suggestions: $('ol.unstyled.prefix-block.a--b.a--rev').find('.prefix-item')
+    .map(
+      (i, suggestion) => $(suggestion).text()
+    )
+    .get()};
 }
 
 function clearRedendentSpaces(text = '') {
