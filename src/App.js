@@ -10,6 +10,7 @@ export default function App() {
   const [ translation, setTranslation ] = useState(Map());
 
   const [ suggestions, handleSuggestion ] = useSuggestion();
+
   const dispatch = useDispatch();
 
   const handleSearch = useCallback(

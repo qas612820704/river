@@ -12,7 +12,7 @@ export function addWord({ word, explanations }) {
 
 export function getWord(word) {
   return async (dispatch, getState) => {
-    let isCached = getState().words.has(word);
+    let isCached = getState().get('words').has(word);
 
     if (!isCached) {
       const result = await fetch(`http://localhost:9527/cambridge/english-chinese-traditional/${word}`)
@@ -21,7 +21,11 @@ export function getWord(word) {
       dispatch(addWord(result));
     }
 
+    dispatch({
+      type: $.INCRESDE_WORD_SEARCH_COUNT,
+      payload: { word },
+    });
 
-    return getState().words.get(word);
+    return getState().getIn(['words', word]);
   }
 }
