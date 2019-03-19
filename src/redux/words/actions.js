@@ -1,27 +1,27 @@
 import * as $ from './constants';
-import { parseSenseHTML } from '../../cambridge-dictionary';
 
-export function addWord(word, senses) {
+export function addWord({ word, explanations }) {
   return {
     type: $.ADD_WORD,
     payload: {
       word,
-      senses,
+      explanations,
     },
   };
 }
 
 export function getWord(word) {
   return async (dispatch, getState) => {
-    const senses = await fetch(`http://localhost:9527/cambridge/english/${word}`)
-      .then(res => res.text())
-      .then(text => parseSenseHTML(text))
+    let isCached = getState().words.has(word);
 
-    dispatch(addWord(word, senses));
+    if (!isCached) {
+      const result = await fetch(`http://localhost:9527/cambridge/english-chinese-traditional/${word}`)
+        .then(res => res.json())
 
-    return {
-      word,
-      senses,
-    };
+      dispatch(addWord(result));
+    }
+
+
+    return getState().words.get(word);
   }
 }

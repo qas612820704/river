@@ -1,12 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { useDispatch } from 'redux-react-hook';
+import { Map } from 'immutable';
 import { Input, AutoComplete } from 'antd';
 import { getWord } from './redux/actions';
-import { fetchSuggestions } from './api/cambridge';
+import { fetchAutoCompleteJson } from './api/cambridge';
 import './App.css';
 
 export default function App() {
-  const [ translation, setTranslation ] = useState({});
+  const [ translation, setTranslation ] = useState(Map());
 
   const [ suggestions, handleSuggestion ] = useSuggestion();
   const dispatch = useDispatch();
@@ -14,7 +15,6 @@ export default function App() {
   const handleSearch = useCallback(
     async word => {
       const translation = await dispatch(getWord(word));
-      console.log(translation);
       setTranslation(translation);
     },
     [],
@@ -34,12 +34,12 @@ export default function App() {
           />
         </AutoComplete>
       </header>
-      { translation.word &&
+      { translation.has('word') &&
         <section>
-          <h1>{translation.word}</h1>
+          <h1>{translation.get('word')}</h1>
           <ul>
-          { translation.senses.map(sense => (
-            <li>{JSON.stringify(sense)}</li>
+          { translation.get('explanations').map(exp => (
+            <li>{exp.toString()}</li>
           ))}
           </ul>
         </section>
@@ -54,13 +54,8 @@ function useSuggestion() {
   const handleSuggestion = useCallback(
     async (value) => {
       if (value === '') return;
-      const { hasExact, suggestions } = await fetchSuggestions(value);
-      setSuggestion([]);
-      setSuggestion(
-        hasExact
-        ? [ value, ...suggestions]
-        : suggestions
-      );
+      const { results: suggestions } = await fetchAutoCompleteJson(value);
+      setSuggestion(suggestions.map(s => s.searchtext));
     },
     [],
   );

@@ -1,15 +1,29 @@
 import cheerio from 'cheerio';
+import { DOMAIN } from './api';
 
-export function parseSenseHTML(html) {
+export function parseExplanationHTML(html) {
   const $ = cheerio.load(html);
-  const $dataRoot = $('#dataset-cald4');
 
-  return $dataRoot.find('.entry-body__el').map((i, entry) => {
+  return $('.entry-body__el').map((i, entry) => {
     const $entry = $(entry);
+    const $ipaUK = $entry.find('.uk .ipa');
+    const $ipaUS = $entry.find('.us .ipa');
+
+    [$ipaUK, $ipaUS].forEach($ipa => {
+      const $sup = $ipa.find('.sp'); // supperscript
+      $sup.replaceWith(`<sup>${$sup.text()}</sup>`);
+    })
+
     return {
       pos: $entry.find('.posgram').text(),
-      ipaUK: $entry.find('.uk .ipa').text(),
-      ipaUS: $entry.find('.us .ipa').text(),
+      ipaUK: {
+        audioUrl: DOMAIN + $entry.find('.uk .sound').data('src-mp3'),
+        html: $ipaUK.html(),
+      },
+      ipaUS: {
+        audioUrl: DOMAIN + $entry.find('.us .sound').data('src-mp3'),
+        html: $ipaUS.html(),
+      },
       senses: $entry.find('.sense-block').map((j, sense) => {
         const $sense = $(sense);
         return {
@@ -22,10 +36,13 @@ export function parseSenseHTML(html) {
               level: $defHead.find('.epp-xref').text(),
               domain: $defHead.find('.domain').text(),
               text: clearRedendentSpaces($defHead.find('.def').text()),
+              translate: $defBody.children('.trans').text(),
               examples: $defBody.find('.examp')
-                .map((l, example) => $(example).text()).get()
-                .map(text => text.trim())
-                .map(clearRedendentSpaces),
+                .map((l, example) => ({
+                  text: clearRedendentSpaces($(example).children('.eg').text().trim()),
+                  translate: $(example).children('.trans').text(),
+                }))
+                .get(),
             };
           }).get(),
         };

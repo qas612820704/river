@@ -1,30 +1,32 @@
 import express from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
+import { fetchExplanationHTML, fetchAutoCompleteJson } from './cambridge-dictionary/api';
+import { parseExplanationHTML } from './cambridge-dictionary/parser';
 
 const app = express();
 
 app.use(cors());
 
-app.get('/ping', (req, res) => res.end('pong'));
+app.get('/cambridge/:from-:to/:word', async (req, res) => {
+  const { word, from, to } = req.params;
 
-app.get('/cambridge/english/:word', async (req, res) => {
-  const word = req.params.word;
+  const explanationHtml = await fetchExplanationHTML(word, { from, to });
 
-  const translateHtml = await fetch(`https://dictionary.cambridge.org/dictionary/english/${word}`)
-    .then(res => res.text());
+  const explanations = parseExplanationHTML(explanationHtml);
 
+  res.json({
+    word,
+    explanations
+  });
+});
 
-  res.end(translateHtml);
-})
+app.get('/cambridge/:from-:to/auto-complete/:word', async (req, res) => {
+  const { word, from, to } = req.params;
 
-app.get('/cambridge/english/spellcheck/:word', async (req, res) => {
-  const word = req.params.word;
+  const autocompleteJson = await fetchAutoCompleteJson(word, { from, to });
 
-  const spellcheckHtml = await fetch(`https://dictionary.cambridge.org/spellcheck/english/?q=${word}`)
-    .then(res => res.text());
-
-  res.end(spellcheckHtml);
+  res.json(autocompleteJson);
 })
 
 export default app;
