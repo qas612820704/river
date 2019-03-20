@@ -15,17 +15,36 @@ export function getWord(word) {
     let isCached = getState().get('words').has(word);
 
     if (!isCached) {
-      const result = await fetch(`http://localhost:9527/cambridge/english-chinese-traditional/${word}`)
-        .then(res => res.json())
+      dispatch({
+        type: $.REQUEST_FETCHING_WORD,
+        payload: { word },
+      });
 
-      dispatch(addWord(result));
+      try {
+        const result = await fetch(`http://localhost:9527/cambridge/english-chinese-traditional/${word}`)
+          .then(res => res.json())
+
+        dispatch(addWord(result));
+
+        dispatch({
+          type: $.SUCCESS_FETCHING_WORD,
+          payload: { word },
+        });
+      } catch (e) {
+        dispatch({
+          type: $.REJECT_FETCHING_WORD,
+          payload: { word },
+        });
+      }
     }
-
-    dispatch({
-      type: $.INCRESDE_WORD_SEARCH_COUNT,
-      payload: { word },
-    });
 
     return getState().getIn(['words', word]);
   }
+}
+
+export function increaseWordSearchCount(word) {
+  return {
+    type: $.INCRESDE_WORD_SEARCH_COUNT,
+    payload: { word },
+  };
 }

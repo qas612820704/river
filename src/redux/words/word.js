@@ -29,8 +29,21 @@ const searchCounter = (state = 0, action) => {
   }
 }
 
+const isFetching = (state = false, action) => {
+  switch (action.type) {
+    case $.REQUEST_FETCHING_WORD:
+      return true;
+    case $.SUCCESS_FETCHING_WORD:
+    case $.REJECT_FETCHING_WORD:
+      return false;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   word,
   explanations,
   searchCounter,
+  isFetching,
 });
