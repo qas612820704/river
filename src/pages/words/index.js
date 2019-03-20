@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useMappedState } from 'redux-react-hook';
 
 export default function Words({ children }) {
   return (
     <div>
-      Hello Words
       { children }
     </div>
   );
