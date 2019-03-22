@@ -12,7 +12,7 @@ export function addWord({ word, explanations }) {
 
 export function getWord(word) {
   return async (dispatch, getState) => {
-    let isCached = getState().get('words').has(word);
+    let isCached = getState().words[word];
 
     if (!isCached) {
       dispatch({
@@ -38,7 +38,7 @@ export function getWord(word) {
       }
     }
 
-    return getState().getIn(['words', word]);
+    return getState().words[word];
   }
 }
 

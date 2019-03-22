@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux-immutable';
+import { combineReducers } from 'redux';
 import words from './words';
 import myDictionary from './my-dictionary';
 

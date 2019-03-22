@@ -1,5 +1,4 @@
-import { OrderedSet } from 'immutable';
-import { combineReducers } from 'redux-immutable';
+import { combineReducers } from 'redux';
 
 const TOGGLE_WORD_TO_DICTIONARY = 'TOGGLE_WORD_TO_DICTIONARY';
 
@@ -7,12 +6,13 @@ const name = (state = 'default', action) => {
   return state;
 }
 
-const wordList = (state = OrderedSet(), action) => {
+const wordList = (state = new Set(), action) => {
   switch (action.type) {
     case TOGGLE_WORD_TO_DICTIONARY:
-      return state.has(action.payload.word)
-        ? state.remove(action.payload.word)
+      state.has(action.payload.word)
+        ? state.delete(action.payload.word)
         : state.add(action.payload.word);
+      return new Set(state);
     default:
       return state;
   }

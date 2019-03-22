@@ -11,7 +11,7 @@ const WordContext = createContext();
 export default function Word({ word }) {
   const translation = useMappedState(
     useCallback(
-      state => state.getIn(['words', word]),
+      state => state.words[word],
       [word],
     ),
   );
@@ -36,15 +36,15 @@ export default function Word({ word }) {
   return (
     <WordContext.Provider value={word}>
       <section style={{ margin: '16px 0' }}>
-        <Spin spinning={translation.get('isFetching')}>
+        <Spin spinning={translation.isFetching}>
           <Title>{word}</Title>
           <Tabs>
-          { translation.get('explanations').map((explaination, i) => (
+          { translation.explanations.map((explaination, i) => (
             <TabPane
               tab={
                 <span>
-                  <Avatar style={{ background: '#008dff', marginRight: 8 }}>{explaination.get('pos')}</Avatar>
-                  {explaination.get('pos')}
+                  <Avatar style={{ background: '#008dff', marginRight: 8 }}>{explaination.pos}</Avatar>
+                  {explaination.pos}
                 </span>
               }
               key={i}
@@ -64,12 +64,12 @@ function renderExplaination(explaination) {
     <div>
       <Paragraph style={{ marginBottom: 16 }}>
         <Icon type="notification" style={{marginRight: 16}} />
-        <IpaAction region="US" {...explaination.get('ipaUS').toJS()} />
-        <IpaAction region="UK" {...explaination.get('ipaUK').toJS()} />
+        <IpaAction region="US" {...explaination.ipaUS} />
+        <IpaAction region="UK" {...explaination.ipaUK} />
       </Paragraph>
       <List
         itemLayout="vertical"
-        dataSource={explaination.get('senses')}
+        dataSource={explaination.senses}
         renderItem={renderSense}
       />
     </div>
@@ -79,15 +79,15 @@ function renderExplaination(explaination) {
 function renderSense(sense) {
   return (
     <List.Item>
-      { sense.get('guideWord') &&
+      { sense.guideWord &&
         <Title level={4}>
           <Icon type="radar-chart" style={{ marginRight: 8 }} />
-          {sense.get('guideWord')}
+          {sense.guideWord}
         </Title>
       }
       <List bordered
         itemLayout="vertical"
-        dataSource={sense.get('definations')}
+        dataSource={sense.definations}
         renderItem={defination => <Defination defination={defination}/>}
       />
     </List.Item>
@@ -99,7 +99,7 @@ function Defination({ defination }) {
 
   const isInMyDictionary = useMappedState(
     useCallback(
-      state => state.getIn(['myDictionary', 'wordList']).has(word),
+      state => state.myDictionary.wordList.has(word),
     ),
   );
 
@@ -117,9 +117,9 @@ function Defination({ defination }) {
           <span>
             <Badge
               style={{ marginRight: 8, background: '#52c41a' }}
-              count={defination.get('level')}
+              count={defination.level}
             />
-            { defination.get('text') }
+            { defination.text }
           </span>
         }
         description={
@@ -131,13 +131,13 @@ function Defination({ defination }) {
                 onClick={handleSaveClick}
               />
             </Tooltip>
-            <span style={{ color: '#1890ff' }}>{defination.get('translate')}</span>
+            <span style={{ color: '#1890ff' }}>{defination.translate}</span>
           </span>
         }
       />
       <List
         itemLayout="vertical"
-        dataSource={defination.get('examples')}
+        dataSource={defination.examples}
         renderItem={renderExample}
       />
     </List.Item>
@@ -147,8 +147,8 @@ function Defination({ defination }) {
 function renderExample(example) {
   return (
     <List.Item>
-      <Paragraph>{example.get('text')}</Paragraph>
-      <Paragraph style={{ color: '#40a9ff' }}>{example.get('translate')}</Paragraph>
+      <Paragraph>{example.text}</Paragraph>
+      <Paragraph style={{ color: '#40a9ff' }}>{example.translate}</Paragraph>
     </List.Item>
   )
 }

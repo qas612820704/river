@@ -1,5 +1,4 @@
-import Immutable, { List } from 'immutable';
-import { combineReducers } from 'redux-immutable';
+import { combineReducers } from 'redux';
 import * as $ from './constants';
 
 const word = (state = '', action) => {
@@ -11,10 +10,10 @@ const word = (state = '', action) => {
   }
 }
 
-const explanations = (state = List(), action) => {
+const explanations = (state = [], action) => {
   switch (action.type) {
     case $.ADD_WORD:
-      return state.merge(Immutable.fromJS(action.payload.explanations));
+      return action.payload.explanations;
     default:
       return state;
   }
