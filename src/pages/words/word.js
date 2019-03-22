@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useContext, createContext } from 'react';
 import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Tooltip } from 'antd';
 import { useMappedState, useDispatch } from 'redux-react-hook';
-import { getWord, increaseWordSearchCount } from '../../redux/actions';
+import { getWord, increaseWordSearchCount, toggleWordToDictionary } from '../../redux/actions';
 
 const { Title, Paragraph, Text } = Typography;
 const { TabPane } = Tabs;
+
+const WordContext = createContext();
 
 export default function Word({ word }) {
   const translation = useMappedState(
@@ -32,26 +34,28 @@ export default function Word({ word }) {
   }
 
   return (
-    <section style={{ margin: '16px 0' }}>
-      <Spin spinning={translation.get('isFetching')}>
-        <Title>{word}</Title>
-        <Tabs>
-        { translation.get('explanations').map((explaination, i) => (
-          <TabPane
-            tab={
-              <span>
-                <Avatar style={{ background: '#008dff', marginRight: 8 }}>{explaination.get('pos')}</Avatar>
-                {explaination.get('pos')}
-              </span>
-            }
-            key={i}
-          >
-          { renderExplaination(explaination) }
-          </TabPane>
-        ))}
-        </Tabs>
-      </Spin>
-    </section>
+    <WordContext.Provider value={word}>
+      <section style={{ margin: '16px 0' }}>
+        <Spin spinning={translation.get('isFetching')}>
+          <Title>{word}</Title>
+          <Tabs>
+          { translation.get('explanations').map((explaination, i) => (
+            <TabPane
+              tab={
+                <span>
+                  <Avatar style={{ background: '#008dff', marginRight: 8 }}>{explaination.get('pos')}</Avatar>
+                  {explaination.get('pos')}
+                </span>
+              }
+              key={i}
+            >
+            { renderExplaination(explaination) }
+            </TabPane>
+          ))}
+          </Tabs>
+        </Spin>
+      </section>
+    </WordContext.Provider>
   );
 }
 
@@ -84,13 +88,28 @@ function renderSense(sense) {
       <List bordered
         itemLayout="vertical"
         dataSource={sense.get('definations')}
-        renderItem={renderDefination}
+        renderItem={defination => <Defination defination={defination}/>}
       />
     </List.Item>
   )
 }
 
-function renderDefination(defination) {
+function Defination({ defination }) {
+  const word = useContext(WordContext);
+
+  const isInMyDictionary = useMappedState(
+    useCallback(
+      state => state.getIn(['myDictionary', 'wordList']).has(word),
+    ),
+  );
+
+  const dispatch = useDispatch();
+
+  const handleSaveClick = useCallback(
+    () => dispatch(toggleWordToDictionary(word)),
+    [word],
+  )
+
   return (
     <List.Item>
       <List.Item.Meta
@@ -106,7 +125,11 @@ function renderDefination(defination) {
         description={
           <span>
             <Tooltip title="Click to save">
-              <Icon type="save" style={{ marginRight: 8, cursor: 'pointer' }} />
+              <Icon
+                type="save"
+                style={{ marginRight: 8, cursor: 'pointer', color: isInMyDictionary ? '#fa8c16' : '' }}
+                onClick={handleSaveClick}
+              />
             </Tooltip>
             <span style={{ color: '#1890ff' }}>{defination.get('translate')}</span>
           </span>
@@ -131,10 +154,22 @@ function renderExample(example) {
 }
 
 function IpaAction({ region, html, audioUrl }) {
+  const [ isPlaying, setPlaying ] = useState(false);
+
   const audio = useMemo(() => new Audio(audioUrl), [audioUrl]);
 
+  useEffect(() => {
+    audio.addEventListener('ended', () => {
+      setPlaying(false);
+    });
+  }, [audio]);
+
+
   const handleTextClick = useCallback(
-    () => audio.play(),
+    () => {
+      setPlaying(true);
+      audio.play();
+    },
     [audio],
   );
 
@@ -143,7 +178,7 @@ function IpaAction({ region, html, audioUrl }) {
       style={{ marginRight: 16, cursor: 'pointer' }}
       onClick={handleTextClick}
     >
-      <Avatar style={{marginRight: 8}}>{region}</Avatar>
+      <Avatar style={{marginRight: 8, background: isPlaying ? '#fa8c16' : '' }}>{region}</Avatar>
       /<span dangerouslySetInnerHTML={{ __html: html }}/>/
     </span>
   )
