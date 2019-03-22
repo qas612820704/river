@@ -13,7 +13,14 @@ const word = (state = '', action) => {
 const explanations = (state = [], action) => {
   switch (action.type) {
     case $.ADD_WORD:
-      return action.payload.explanations;
+      return action.payload.explanations
+        .map(exp => ({
+          ...exp,
+          senses: exp.senses.map(sense => ({
+            ...sense,
+            definations: sense.definations.map(def => def.id),
+          }))
+        }));
     default:
       return state;
   }

@@ -33,6 +33,7 @@ export function parseExplanationHTML(html) {
             const $defHead = $defBlock.find('.def-head');
             const $defBody = $defBlock.find('.def-body');
             return {
+              id: $defBlock.data('wl-senseid'),
               level: $defHead.find('.epp-xref').text(),
               domain: $defHead.find('.domain').text(),
               text: clearRedendentSpaces($defHead.find('.def').text()),

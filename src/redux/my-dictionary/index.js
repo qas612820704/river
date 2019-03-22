@@ -1,33 +1,33 @@
 import { combineReducers } from 'redux';
 
-const TOGGLE_WORD_TO_DICTIONARY = 'TOGGLE_WORD_TO_DICTIONARY';
+const TOGGLE_DEFINATION_IN_DICTIONARY = 'TOGGLE_DEFINATION_IN_DICTIONARY';
 
-const name = (state = 'default', action) => {
+const name = (state = 'default') => {
   return state;
 }
 
-const wordList = (state = new Set(), action) => {
+const words = (state = new Set(), action) => {
   switch (action.type) {
-    case TOGGLE_WORD_TO_DICTIONARY:
-      state.has(action.payload.word)
-        ? state.delete(action.payload.word)
-        : state.add(action.payload.word);
+    case TOGGLE_DEFINATION_IN_DICTIONARY:
+      state.has(action.payload.definationId)
+        ? state.delete(action.payload.definationId)
+        : state.add(action.payload.definationId);
       return new Set(state);
     default:
       return state;
   }
 }
 
-export function toggleWordToDictionary(word) {
+export function toggleDefinationInDictionary(definationId) {
   return {
-    type: TOGGLE_WORD_TO_DICTIONARY,
+    type: TOGGLE_DEFINATION_IN_DICTIONARY,
     payload: {
-      word,
+      definationId,
     }
   }
 }
 
 export default combineReducers({
   name,
-  wordList,
+  words,
 });

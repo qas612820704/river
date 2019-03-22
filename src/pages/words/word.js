@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo, useContext, createContext } from 'react';
 import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Tooltip } from 'antd';
 import { useMappedState, useDispatch } from 'redux-react-hook';
-import { getWord, increaseWordSearchCount, toggleWordToDictionary } from '../../redux/actions';
+import { getWord, increaseWordSearchCount, toggleDefinationInDictionary } from '../../redux/actions';
 
 const { Title, Paragraph, Text } = Typography;
 const { TabPane } = Tabs;
@@ -88,25 +88,32 @@ function renderSense(sense) {
       <List bordered
         itemLayout="vertical"
         dataSource={sense.definations}
-        renderItem={defination => <Defination defination={defination}/>}
+        renderItem={definationId => <Defination definationId={definationId}/>}
       />
     </List.Item>
   )
 }
 
-function Defination({ defination }) {
+function Defination({ definationId }) {
   const word = useContext(WordContext);
+  const defination = useMappedState(
+    state => state.definations[definationId],
+    [definationId],
+  );
 
   const isInMyDictionary = useMappedState(
     useCallback(
-      state => state.myDictionary.wordList.has(word),
+      state => state.myDictionary.words.has(definationId),
+      [word],
     ),
   );
+
+  console.log('isInMyDictionary', isInMyDictionary);
 
   const dispatch = useDispatch();
 
   const handleSaveClick = useCallback(
-    () => dispatch(toggleWordToDictionary(word)),
+    () => dispatch(toggleDefinationInDictionary(definationId)),
     [word],
   )
 
