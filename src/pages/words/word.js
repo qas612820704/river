@@ -97,7 +97,7 @@ function renderSense(sense) {
   )
 }
 
-function Defination({ definationId }) {
+export function Defination({ definationId }) {
   const word = useContext(WordContext);
   const defination = useMappedState(
     state => state.definations[definationId],
@@ -123,7 +123,7 @@ function Defination({ definationId }) {
   )
 
   return (
-    <List.Item>
+    <List.Item style={{ flexDirection: 'column' }}>
       <List.Item.Meta
         title={
           <span>

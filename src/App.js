@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { Router, navigate } from '@reach/router';
+import { Router, Link, navigate } from '@reach/router';
 import { Layout, Input, AutoComplete } from 'antd';
 import Words from './pages/words';
 import Word from './pages/words/word';
+import Dictionary from './pages/dictionary';
 import { fetchAutoCompleteJson } from './api/cambridge';
 import './App.css';
 
@@ -15,6 +16,7 @@ export default function App() {
         <Words path="words">
           <Word path=":word"/>
         </Words>
+        <Dictionary path="dictionary" />
       </Main>
     </Router>
   );
@@ -40,6 +42,7 @@ function Main({ children }) {
           onSearch={handleSearch}
         />
       </AutoComplete>
+      <Link to="/dictionary">Go to My Dictionary</Link>
       { children }
     </Content>
   );
