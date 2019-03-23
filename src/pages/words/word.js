@@ -1,7 +1,10 @@
 import React, { useState, useCallback, useEffect, useMemo, useContext, createContext } from 'react';
 import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Tooltip } from 'antd';
 import { useMappedState, useDispatch } from 'redux-react-hook';
-import { getWord, increaseWordSearchCount, toggleDefinationInDictionary } from '../../redux/actions';
+import {
+  getWord, increaseWordSearchCount,
+  addDefinationInDictionary, delDefinationInDictionary,
+} from '../../redux/actions';
 
 const { Title, Paragraph, Text } = Typography;
 const { TabPane } = Tabs;
@@ -108,13 +111,15 @@ function Defination({ definationId }) {
     ),
   );
 
-  console.log('isInMyDictionary', isInMyDictionary);
-
   const dispatch = useDispatch();
 
   const handleSaveClick = useCallback(
-    () => dispatch(toggleDefinationInDictionary(definationId)),
-    [word],
+    () => {
+      const handler = isInMyDictionary
+        ? delDefinationInDictionary
+        : addDefinationInDictionary;
+      dispatch(handler(definationId))},
+    [isInMyDictionary],
   )
 
   return (
