@@ -15,7 +15,7 @@ export default function App() {
     <Router>
       <Main path="/">
         <Words path="words">
-          <Word path=":word"/>
+          <Word path=":wordId"/>
         </Words>
         <Dictionaries path="dictionaries">
           <Dictionary path=":dictionaryId" />

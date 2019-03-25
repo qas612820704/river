@@ -1,5 +1,4 @@
 import express from 'express';
-import fetch from 'node-fetch';
 import cors from 'cors';
 import { fetchExplanationHTML, fetchAutoCompleteJson } from './cambridge-dictionary/api';
 import { parseExplanationHTML } from './cambridge-dictionary/parser';
@@ -16,7 +15,8 @@ app.get('/cambridge/:from-:to/:word', async (req, res) => {
   const explanations = parseExplanationHTML(explanationHtml);
 
   res.json({
-    word,
+    id: word,
+    name: word,
     explanations
   });
 });

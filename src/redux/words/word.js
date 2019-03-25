@@ -1,29 +1,21 @@
 import { combineReducers } from 'redux';
 import * as $ from './constants';
 
-const word = (state = '', action) => {
+const id = (state = '', action) => {
   switch (action.type) {
-    case $.ADD_WORD:
-      return action.payload.word;
+    case $.REQUEST_FETCHING_WORD:
+      return action.payload.id;
     default:
       return state;
   }
 }
 
-const explanations = (state = [], action) => {
-  switch (action.type) {
-    case $.ADD_WORD:
-      return action.payload.explanations
-        .map(exp => ({
-          ...exp,
-          senses: exp.senses.map(sense => ({
-            ...sense,
-            definations: sense.definations.map(def => def.id),
-          }))
-        }));
-    default:
-      return state;
-  }
+const name = (state = '') => {
+  return state;
+}
+
+const explanations = (state = []) => {
+  return state;
 }
 
 const searchCounter = (state = 0, action) => {
@@ -48,7 +40,8 @@ const isFetching = (state = false, action) => {
 }
 
 export default combineReducers({
-  word,
+  id,
+  name,
   explanations,
   searchCounter,
   isFetching,

@@ -1,48 +1,24 @@
+import { mapValues } from 'lodash';
 import defination from './defination';
-import { ADD_WORD } from '../words/constants';
 import { RESTORE_DICTIONARY } from '../dictionaries/constants';
+import { ADD_ENTITIES } from '../constants';
 
 const definations = (state = {}, action) => {
   switch (action.type) {
-    case ADD_WORD:
-      const definations = action.payload.explanations
-        .flatMap(exp => exp.senses)
-        .flatMap(sense => sense.definations);
-
-      return {
-        ...state,
-        ...definations.reduce((result, def) => {
-            return {
-              ...result,
-              [def.id]: defination(
-                state[def.id],
-                {
-                  ...action,
-                  payload: {
-                    ...action.payload,
-                    defination: def,
-                  }
-                }
-              ),
-            };
-          }, {}),
-      }
     case RESTORE_DICTIONARY:
+    case ADD_ENTITIES:
       return {
         ...state,
-        ...action.payload.definations.reduce(
-          (result, def) => {
-            return {
-              ...result,
-              [def.id]: defination(
-                def,
-                action,
-              ),
-            };
-          },
-          {},
-        )
-      }
+        ...mapValues(action.payload.definations, d => {
+          return defination(
+            {
+              ...state[d.id],
+              ...d,
+            },
+            action,
+          )
+        }),
+      };
     default:
       return state;
   }

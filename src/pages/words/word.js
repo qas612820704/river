@@ -1,34 +1,36 @@
-import React, { useState, useCallback, useEffect, useMemo, useContext, createContext } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Tooltip } from 'antd';
 import { useMappedState, useDispatch } from 'redux-react-hook';
 import {
   getWord, increaseWordSearchCount,
   addDefinationInDictionary, delDefinationInDictionary,
 } from '../../redux/actions';
+import {
+  selectWord
+} from '../../redux/selectors';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 const { TabPane } = Tabs;
 
-const WordContext = createContext();
-
-export default function Word({ word }) {
-  const translation = useMappedState(
+export default function Word({ wordId }) {
+  const word = useMappedState(
     useCallback(
-      state => state.words[word],
-      [word],
+      state => selectWord(state, wordId),
+      [wordId],
     ),
   );
+
   const dispatch = useDispatch();
 
   useEffect(
     () => {
-      dispatch(increaseWordSearchCount(word));
+      dispatch(increaseWordSearchCount(wordId));
     },
-    [word]
+    [wordId]
   );
 
-  if (!translation) {
-    dispatch(getWord(word));
+  if (!word) {
+    dispatch(getWord(wordId));
     return  (
       <Spin>
         <Skeleton />
@@ -37,28 +39,26 @@ export default function Word({ word }) {
   }
 
   return (
-    <WordContext.Provider value={word}>
-      <section style={{ margin: '16px 0' }}>
-        <Spin spinning={translation.isFetching}>
-          <Title>{word}</Title>
-          <Tabs>
-          { translation.explanations.map((explaination, i) => (
-            <TabPane
-              tab={
-                <span>
-                  <Avatar style={{ background: '#008dff', marginRight: 8 }}>{explaination.pos}</Avatar>
-                  {explaination.pos}
-                </span>
-              }
-              key={i}
-            >
-            { renderExplaination(explaination) }
-            </TabPane>
-          ))}
-          </Tabs>
-        </Spin>
-      </section>
-    </WordContext.Provider>
+    <section style={{ margin: '16px 0' }}>
+      <Spin spinning={word.isFetching}>
+        <Title>{wordId}</Title>
+        <Tabs>
+        { word.explanations.map((explaination, i) => (
+          <TabPane
+            tab={
+              <span>
+                <Avatar style={{ background: '#008dff', marginRight: 8 }}>{explaination.pos}</Avatar>
+                {explaination.pos}
+              </span>
+            }
+            key={explaination.pos}
+          >
+          { renderExplaination(explaination) }
+          </TabPane>
+        ))}
+        </Tabs>
+      </Spin>
+    </section>
   );
 }
 
@@ -91,25 +91,14 @@ function renderSense(sense) {
       <List bordered
         itemLayout="vertical"
         dataSource={sense.definations}
-        renderItem={definationId => <Defination definationId={definationId}/>}
+        renderItem={defination => <Defination defination={defination}/>}
       />
     </List.Item>
   )
 }
 
-export function Defination({ definationId }) {
-  const word = useContext(WordContext);
-  const defination = useMappedState(
-    state => state.definations[definationId],
-    [definationId],
-  );
-
-  const isInMyDictionary = useMappedState(
-    useCallback(
-      state => state.dictionaries['default'].definations.includes(definationId),
-      [word],
-    ),
-  );
+export function Defination({ defination }) {
+  const isInMyDictionary = true;
 
   const dispatch = useDispatch();
 
@@ -118,7 +107,7 @@ export function Defination({ definationId }) {
       const handler = isInMyDictionary
         ? delDefinationInDictionary
         : addDefinationInDictionary;
-      dispatch(handler(definationId))},
+      dispatch(handler(defination.id))},
     [isInMyDictionary],
   )
 

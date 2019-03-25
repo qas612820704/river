@@ -1,3 +1,4 @@
+import { mapKeys } from 'lodash';
 import * as $ from './constants';
 
 export function toggleDefinationInDictionary(definationId, dictionaryId='default') {
@@ -22,7 +23,7 @@ export function restoreDictionary(dictionaryId='default') {
       type: $.RESTORE_DICTIONARY,
       dictionaryId,
       payload: {
-        definations,
+        definations: mapKeys(definations, d => d.id),
       },
     });
   };
