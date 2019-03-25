@@ -1,21 +1,29 @@
+import defination from './defination';
 import { ADD_WORD } from '../words/constants';
-import { RESTORE_DICTIONARY } from '../my-dictionary';
+import { RESTORE_DICTIONARY } from '../dictionaries/constants';
 
 const definations = (state = {}, action) => {
   switch (action.type) {
     case ADD_WORD:
+      const definations = action.payload.explanations
+        .flatMap(exp => exp.senses)
+        .flatMap(sense => sense.definations);
+
       return {
         ...state,
-        ...action.payload.explanations
-          .flatMap(exp => exp.senses)
-          .flatMap(sense => sense.definations)
-          .reduce((result, defination) => {
+        ...definations.reduce((result, def) => {
             return {
               ...result,
-              [defination.id]: {
-                word: action.payload.word,
-                ...defination
-              },
+              [def.id]: defination(
+                state[def.id],
+                {
+                  ...action,
+                  payload: {
+                    ...action.payload,
+                    defination: def,
+                  }
+                }
+              ),
             };
           }, {}),
       }
@@ -26,7 +34,10 @@ const definations = (state = {}, action) => {
           (result, def) => {
             return {
               ...result,
-              [def.id]: def,
+              [def.id]: defination(
+                def,
+                action,
+              ),
             };
           },
           {},

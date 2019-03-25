@@ -1,2 +1,2 @@
 export * from './words/actions';
-export * from './my-dictionary';
+export * from './dictionaries/actions';

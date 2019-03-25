@@ -3,16 +3,20 @@ import { useMappedState } from 'redux-react-hook';
 import { Row, Col, Card, Button, Badge } from 'antd';
 import { Defination } from '../words/word';
 
-export default function Dictionary() {
-  const definations = useMappedState(
+export default function Dictionary({ dictionaryId }) {
+  const dictionary = useMappedState(
     useCallback(
       state => {
-        return [...state.myDictionary.words].map(
-          definationId => state.definations[definationId],
-        );
+        const dictionary = state.dictionaries[dictionaryId];
+        return {
+          ...dictionary,
+          definations: dictionary.definations.map(
+            defId => state.definations[defId],
+          )
+        }
       },
-      [],
-    )
+      [dictionaryId],
+    ),
   );
 
   const [ isExpanded, enableExpanded ] = useState(false);
@@ -23,7 +27,7 @@ export default function Dictionary() {
 
   return (
     <Row gutter={16}>
-    { definations.map(defination => (
+    { dictionary.definations.map(defination => (
       <Col key={defination.id} span={6}>
         <Card>
           <Card.Meta

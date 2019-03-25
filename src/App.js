@@ -3,7 +3,8 @@ import { Router, Link, navigate } from '@reach/router';
 import { Layout, Input, AutoComplete } from 'antd';
 import Words from './pages/words';
 import Word from './pages/words/word';
-import Dictionary from './pages/dictionary';
+import Dictionaries from './pages/dictionaries';
+import Dictionary from './pages/dictionaries/dictionary';
 import { fetchAutoCompleteJson } from './api/cambridge';
 import './App.css';
 
@@ -16,7 +17,9 @@ export default function App() {
         <Words path="words">
           <Word path=":word"/>
         </Words>
-        <Dictionary path="dictionary" />
+        <Dictionaries path="dictionaries">
+          <Dictionary path=":dictionaryId" />
+        </Dictionaries>
       </Main>
     </Router>
   );

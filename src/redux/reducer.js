@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import words from './words';
-import myDictionary from './my-dictionary';
+import dictionaries from './dictionaries';
 import definations from './definations';
 
 export default combineReducers({
   words,
-  myDictionary,
+  dictionaries,
   definations,
 })

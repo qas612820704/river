@@ -106,7 +106,7 @@ export function Defination({ definationId }) {
 
   const isInMyDictionary = useMappedState(
     useCallback(
-      state => state.myDictionary.words.has(definationId),
+      state => state.dictionaries['default'].definations.includes(definationId),
       [word],
     ),
   );

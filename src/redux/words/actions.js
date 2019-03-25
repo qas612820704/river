@@ -31,6 +31,7 @@ export function getWord(word) {
           payload: { word },
         });
       } catch (e) {
+        console.error(e);
         dispatch({
           type: $.REJECT_FETCHING_WORD,
           payload: { word },
