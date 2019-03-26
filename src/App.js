@@ -45,7 +45,7 @@ function Main({ children }) {
           onSearch={handleSearch}
         />
       </AutoComplete>
-      <Link to="/dictionary">Go to My Dictionary</Link>
+      <Link to="/dictionaries/default">Go to My Dictionary</Link>
       { children }
     </Content>
   );

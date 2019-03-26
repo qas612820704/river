@@ -1,36 +1,16 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Tooltip } from 'antd';
-import { useMappedState, useDispatch } from 'redux-react-hook';
 import {
-  getWord, increaseWordSearchCount,
-  addDefinationInDictionary, delDefinationInDictionary,
-} from '../../redux/actions';
-import {
-  selectWord
-} from '../../redux/selectors';
+  useWord, useDefination
+} from '../../redux/hooks';
 
 const { Title, Paragraph } = Typography;
 const { TabPane } = Tabs;
 
 export default function Word({ wordId }) {
-  const word = useMappedState(
-    useCallback(
-      state => selectWord(state, wordId),
-      [wordId],
-    ),
-  );
-
-  const dispatch = useDispatch();
-
-  useEffect(
-    () => {
-      dispatch(increaseWordSearchCount(wordId));
-    },
-    [wordId]
-  );
+  const { word } = useWord(wordId);
 
   if (!word) {
-    dispatch(getWord(wordId));
     return  (
       <Spin>
         <Skeleton />
@@ -43,7 +23,7 @@ export default function Word({ wordId }) {
       <Spin spinning={word.isFetching}>
         <Title>{wordId}</Title>
         <Tabs>
-        { word.explanations.map((explaination, i) => (
+        { word.explanations.map(explaination => (
           <TabPane
             tab={
               <span>
@@ -91,25 +71,17 @@ function renderSense(sense) {
       <List bordered
         itemLayout="vertical"
         dataSource={sense.definations}
-        renderItem={defination => <Defination defination={defination}/>}
+        renderItem={definationId => <Defination definationId={definationId}/>}
       />
     </List.Item>
   )
 }
 
-export function Defination({ defination }) {
-  const isInMyDictionary = true;
-
-  const dispatch = useDispatch();
-
-  const handleSaveClick = useCallback(
-    () => {
-      const handler = isInMyDictionary
-        ? delDefinationInDictionary
-        : addDefinationInDictionary;
-      dispatch(handler(defination.id))},
-    [isInMyDictionary],
-  )
+export function Defination({ definationId }) {
+  const {
+    defination,
+    toggleMapDefinationToDictionary,
+  } = useDefination(definationId);
 
   return (
     <List.Item style={{ flexDirection: 'column' }}>
@@ -128,8 +100,8 @@ export function Defination({ defination }) {
             <Tooltip title="Click to save">
               <Icon
                 type="save"
-                style={{ marginRight: 8, cursor: 'pointer', color: isInMyDictionary ? '#fa8c16' : '' }}
-                onClick={handleSaveClick}
+                style={{ marginRight: 8, cursor: 'pointer', color: defination.isInSomeDictionary ? '#fa8c16' : '' }}
+                onClick={toggleMapDefinationToDictionary}
               />
             </Tooltip>
             <span style={{ color: '#1890ff' }}>{defination.translate}</span>

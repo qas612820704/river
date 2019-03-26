@@ -11,13 +11,13 @@ const name = (state = 'default') => {
 
 const definations = (state = [], action) => {
   switch (action.type) {
-    case $.ADD_DEFINATION_IN_DICTIONARY:
+    case $.MAP_DEFINATION_TO_DICTIONARY:
       return [
         ...state,
         action.payload.definationId,
       ]
 
-    case $.DEL_DEFINATION_IN_DICTIONARY:
+    case $.UNMAP_DEFINATION_TO_DICTIONARY:
       return state.filter(def => def.id !== action.payload.definationId);
 
     default:

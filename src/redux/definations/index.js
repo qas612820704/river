@@ -1,12 +1,12 @@
 import { mapValues } from 'lodash';
 import defination from './defination';
-import { RESTORE_DICTIONARY } from '../dictionaries/constants';
-import { ADD_ENTITIES } from '../constants';
+import { MAP_DEFINATION_TO_DICTIONARY, UNMAP_DEFINATION_TO_DICTIONARY } from '../dictionaries/constants';
+import { ADD_ENTITIES, RESTORE_FROM_INDEXEDDB } from '../constants';
 
 const definations = (state = {}, action) => {
   switch (action.type) {
-    case RESTORE_DICTIONARY:
     case ADD_ENTITIES:
+    case RESTORE_FROM_INDEXEDDB:
       return {
         ...state,
         ...mapValues(action.payload.definations, d => {
@@ -14,10 +14,20 @@ const definations = (state = {}, action) => {
             {
               ...state[d.id],
               ...d,
+              word: action.result,
             },
             action,
           )
         }),
+      };
+    case MAP_DEFINATION_TO_DICTIONARY:
+    case UNMAP_DEFINATION_TO_DICTIONARY:
+      return {
+        ...state,
+        [action.payload.definationId]: defination(
+          state[action.payload.definationId],
+          action
+        ),
       };
     default:
       return state;

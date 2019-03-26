@@ -4921,10 +4921,10 @@ icss-utils@^2.1.0:
   dependencies:
     postcss "^6.0.1"
 
-idb-keyval@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/idb-keyval/-/idb-keyval-3.1.0.tgz#cce9ed320734446784d52ed398c4b075a4273f51"
-  integrity sha512-iFwFN5n00KNNnVxlOOK280SJJfXWY7pbMUOQXdIXehvvc/mGCV/6T2Ae+Pk2KwAkkATDTwfMavOiDH5lrJKWXQ==
+idb@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/idb/-/idb-4.0.0.tgz#0c79ab1655fb7d14eb8f4626d761f0847ab2f014"
+  integrity sha512-TWHSYcfqKet9ew50PFqdi2KB8gfdXO3NESh9be7eJqk9uC0rmGb6A/eiIN/UpGYkbjZ98psDujE5/oaeqkraCQ==
 
 identity-obj-proxy@3.0.0:
   version "3.0.0"

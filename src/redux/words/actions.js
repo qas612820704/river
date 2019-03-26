@@ -18,7 +18,7 @@ export function getWord(id) {
 
         const data = normalize(result, schema.word);
 
-        dispatch(addEntities(data.entities));
+        dispatch(addEntities(data.entities, data.result));
 
         dispatch({
           type: $.SUCCESS_FETCHING_WORD,

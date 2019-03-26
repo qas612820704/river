@@ -5,7 +5,7 @@ import { StoreContext } from 'redux-react-hook';
 import thunk from 'redux-thunk';
 import reducer from './redux/reducer';
 import App from './App';
-import { restoreDictionary } from './redux/actions';
+import { restoreFromIndexedDB } from './redux/actions';
 import * as db from './db';
 import * as schema from './api/schema';
 import './index.css';
@@ -23,7 +23,7 @@ const store = createStore(reducer, devtool(
   applyMiddleware(thunk.withExtraArgument({ db, schema }))
 ));
 
-store.dispatch(restoreDictionary());
+store.dispatch(restoreFromIndexedDB());
 
 render(
   <StoreContext.Provider value={store}>

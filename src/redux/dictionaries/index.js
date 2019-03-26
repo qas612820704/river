@@ -1,5 +1,6 @@
+import { mapValues } from 'lodash';
 import dictionary from './dictionary';
-
+import { RESTORE_FROM_INDEXEDDB } from '../constants';
 const defaultDictionary = dictionary(undefined, { type: '@@INIT' });
 
 const dictionaries = (
@@ -11,12 +12,26 @@ const dictionaries = (
   if (action.type.includes('DICT')) {
     return {
       ...state,
-      [action.dictionaryId]: dictionary(
-        state[action.dictionaryId],
+      [action.payload.dictionaryId]: dictionary(
+        state[action.payload.dictionaryId],
         action,
       ),
     };
   }
+
+  if (action.type === RESTORE_FROM_INDEXEDDB)
+    return {
+      ...state,
+      ...mapValues(action.payload.dictionaries, d => {
+        return dictionary(
+          {
+            ...state[d.id],
+            ...d,
+          },
+          action,
+        );
+      }),
+    };
 
   return state;
 }
