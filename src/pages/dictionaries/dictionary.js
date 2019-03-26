@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useMappedState } from 'redux-react-hook';
-import { Row, Col, Card, Button, Badge } from 'antd';
-import { Defination } from '../words/word';
+import { Row, Col, Card, Badge } from 'antd';
 
 export default function Dictionary({ dictionaryId }) {
   const dictionary = useMappedState(
@@ -17,12 +16,6 @@ export default function Dictionary({ dictionaryId }) {
       },
       [dictionaryId],
     ),
-  );
-
-  const [ isExpanded, enableExpanded ] = useState(false);
-  const handleExpandedClick = useCallback(
-    () => enableExpanded(!isExpanded),
-    [isExpanded],
   );
 
   return (

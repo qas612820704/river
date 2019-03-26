@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import { useMappedState } from 'redux-react-hook';
+import React from 'react';
 
 export default function Words({ children }) {
   return (
