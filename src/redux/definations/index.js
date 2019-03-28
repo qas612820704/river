@@ -6,7 +6,6 @@ import { ADD_ENTITIES, RESTORE_FROM_INDEXEDDB } from '../constants';
 const definations = (state = {}, action) => {
   switch (action.type) {
     case ADD_ENTITIES:
-    case RESTORE_FROM_INDEXEDDB:
       return {
         ...state,
         ...mapValues(action.payload.definations, d => {
@@ -15,6 +14,19 @@ const definations = (state = {}, action) => {
               ...state[d.id],
               ...d,
               word: action.result,
+            },
+            action,
+          )
+        }),
+      };
+    case RESTORE_FROM_INDEXEDDB:
+      return {
+        ...state,
+        ...mapValues(action.payload.definations, d => {
+          return defination(
+            {
+              ...state[d.id],
+              ...d,
             },
             action,
           )
