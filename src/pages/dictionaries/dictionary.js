@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useMappedState } from 'redux-react-hook';
+import { Link } from '@reach/router';
 import { List, Card, Badge } from 'antd';
 
 export default function Dictionary({ dictionaryId }) {
@@ -38,7 +39,9 @@ function renderDefination(defination) {
                 style={{ marginRight: 8, background: '#52c41a' }}
                 count={defination.level}
               />
-              {defination.word}
+              <Link to={`/words/${defination.word}`}>
+                {defination.word}
+              </Link>
             </span>
           }
           description={defination.translate}

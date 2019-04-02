@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { useMappedState, useDispatch } from 'redux-react-hook';
+import { map } from 'lodash';
 import {
   getWord, increaseWordSearchCount,
   mapDefinationToDictionary, unmapDefinationToDictionary
@@ -34,29 +35,39 @@ export function useDefination(definationId) {
       state => {
         const defination = state.definations[definationId];
 
-        return {
-          ...defination,
-          isInSomeDictionary: defination.dictionaries.length !== 0,
-        }
+        return defination;
       },
       [definationId],
     ),
   );
 
-  const dispatch = useDispatch();
-
-  const toggleMapDefinationToDictionary = useCallback(
-    () => {
-      const handler = defination.isInSomeDictionary
-        ? unmapDefinationToDictionary
-        : mapDefinationToDictionary;
-      dispatch(handler(definationId));
-    },
-    [defination.isInSomeDictionary],
-  )
-
   return {
     defination,
-    toggleMapDefinationToDictionary,
   }
+}
+
+export function useDictionaries() {
+  const dictionaries = useMappedState(
+    useCallback(
+      state => state.dictionaries,
+      [],
+    ),
+  );
+
+  return {
+    dictionaries: map(dictionaries),
+  };
+}
+
+export function useDictionary(dictionaryId) {
+  const dictionary = useMappedState(
+    useCallback(
+      state => state.dictionaries[dictionaryId],
+      [dictionaryId],
+    ),
+  );
+
+  return {
+    dictionary,
+  };
 }

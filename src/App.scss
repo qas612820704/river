@@ -1,0 +1,47 @@
+%rail {
+  margin: auto;
+  max-width: 64em;
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.main {
+  overflow-x: unset !important;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  text-align: center;
+  padding: 0 2em !important;
+  z-index: 20;
+  background: #f0f2f5 !important;
+  box-shadow: 0 0 20px #888888;
+
+  &__search-bar {
+    @extend %rail;
+  }
+}
+
+.content__container {
+  padding: 2em;
+  min-height: 100vh;
+  .content {
+    min-height: 100vh;
+    margin-top: 2em;
+    @extend %rail;
+  }
+}
+
+.sider {
+  &__brand {
+      text-align: center;
+      padding: 1em 0;
+      &__avatar {
+        color: #001529;
+    }
+  }
+}

@@ -1,8 +1,11 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Tooltip } from 'antd';
+import { map } from 'lodash';
+import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Tooltip, Menu, Checkbox, Dropdown } from 'antd';
 import {
   useWord, useDefination
 } from '../../redux/hooks';
+import { useMappedState, useDispatch } from 'redux-react-hook';
+import { toggleMappingDefinationToDictionary as reduxToggleMappingDefinationToDictionary } from '../../redux/actions';
 
 const { Title, Paragraph } = Typography;
 const { TabPane } = Tabs;
@@ -78,10 +81,33 @@ function renderSense(sense) {
 }
 
 export function Defination({ definationId }) {
-  const {
-    defination,
-    toggleMapDefinationToDictionary,
-  } = useDefination(definationId);
+  const { defination } = useDefination(definationId);
+
+  const dictionaries = useMappedState(
+    state => map(state.dictionaries),
+    [],
+  );
+
+  const dispatch = useDispatch();
+  const toggleMappingDefinationToDictionary = useCallback(
+    (definationId, dictionaryId) => dispatch(reduxToggleMappingDefinationToDictionary(definationId, dictionaryId)),
+    [],
+  );
+
+  const menu = (
+    <Menu>
+    { dictionaries.map(d => (
+      <Menu.Item key={d.id}>
+        <Checkbox
+          checked={d.definations.includes(definationId)}
+          onChange={() => toggleMappingDefinationToDictionary(definationId, d.id)}
+        >
+        {d.name}
+        </Checkbox>
+      </Menu.Item>
+    ))}
+    </Menu>
+  )
 
   return (
     <List.Item style={{ flexDirection: 'column' }}>
@@ -97,13 +123,12 @@ export function Defination({ definationId }) {
         }
         description={
           <span>
-            <Tooltip title="Click to save">
+            <Dropdown overlay={menu}>
               <Icon
-                type="save"
-                style={{ marginRight: 8, cursor: 'pointer', color: defination.isInSomeDictionary ? '#fa8c16' : '' }}
-                onClick={toggleMapDefinationToDictionary}
+                type="plus"
+                style={{ marginRight: 8, cursor: 'pointer' }}
               />
-            </Tooltip>
+            </Dropdown>
             <span style={{ color: '#1890ff' }}>{defination.translate}</span>
           </span>
         }
