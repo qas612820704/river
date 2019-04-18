@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { map } from 'lodash';
-import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Tooltip, Menu, Checkbox, Dropdown } from 'antd';
+import { Avatar, Badge, Spin, Tabs, Icon, List, Typography, Skeleton, Menu, Checkbox, Dropdown } from 'antd';
 import {
   useWord, useDefination
 } from '../../redux/hooks';

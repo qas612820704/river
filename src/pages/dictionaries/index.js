@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { useMappedState, useDispatch } from 'redux-react-hook';
-import { Router, Link, navigate } from '@reach/router';
+import { Router, navigate } from '@reach/router';
 import { map } from 'lodash';
-import { Input, Icon, Card, List, Badge } from 'antd';
+import { Input, Icon, Card, List } from 'antd';
 import  Dictionary from './dictionary';
 import { addDictionary as reduxAddDictionary, delDictionary as reduxDelDictionary } from '../../redux/actions';
 

@@ -1,10 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useMappedState, useDispatch } from 'redux-react-hook';
 import { map } from 'lodash';
-import {
-  getWord, increaseWordSearchCount,
-  mapDefinationToDictionary, unmapDefinationToDictionary
-} from './actions';
+import { getWord, increaseWordSearchCount } from './actions';
 
 export function useWord(wordId) {
   const word = useMappedState(
