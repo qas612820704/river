@@ -83,6 +83,8 @@ function renderSense(sense) {
 export function Defination({ definationId }) {
   const { defination } = useDefination(definationId);
 
+  const [dropdownVisibility, setDropdownVisibility] = useState(false);
+
   const dictionaries = useMappedState(
     state => map(state.dictionaries),
     [],
@@ -95,7 +97,7 @@ export function Defination({ definationId }) {
   );
 
   const menu = (
-    <Menu>
+    <Menu onMouseLeave={() => setDropdownVisibility(false)}>
     { dictionaries.map(d => (
       <Menu.Item key={d.id}>
         <Checkbox
@@ -123,7 +125,11 @@ export function Defination({ definationId }) {
         }
         description={
           <span>
-            <Dropdown overlay={menu}>
+            <Dropdown
+              overlay={menu}
+              visible={dropdownVisibility}
+              onMouseEnter={() => setDropdownVisibility(true)}
+            >
               <Icon
                 type="plus"
                 style={{ marginRight: 8, cursor: 'pointer' }}
