@@ -2,6 +2,7 @@
   "name": "river",
   "version": "0.1.0",
   "private": true,
+  "homepage" : "http://qas612820704.github.io/river",
   "babel": {
     "presets": [
       "@babel/preset-env"
@@ -33,7 +34,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -49,6 +51,7 @@
     "@babel/node": "^7.2.2",
     "@babel/plugin-transform-runtime": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
-    "@babel/register": "^7.0.0"
+    "@babel/register": "^7.0.0",
+    "gh-pages": "^2.0.1"
   }
 }

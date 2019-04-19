@@ -12,7 +12,7 @@ const { Header ,Content, Sider } = Layout;
 
 export default function App() {
   return (
-    <Router>
+    <Router basepath="/river">
       <Main path="/">
         <Words path="words">
           <Word path=":wordId"/>

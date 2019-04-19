@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "river",
+  "builds": [
+    { "src": "server/express.js", "use": "@now/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "server/express.js" }
+  ]
+}

@@ -1,6 +1,7 @@
 import { normalize } from 'normalizr';
 import * as $ from './constants';
 import { addEntities } from '../actions';
+import { fetchWord } from '../../api/cambridge';
 
 export function getWord(id) {
   return async (dispatch, getState, { schema }) => {
@@ -13,8 +14,7 @@ export function getWord(id) {
       });
 
       try {
-        const result = await fetch(`http://localhost:9527/cambridge/english-chinese-traditional/${id}`)
-          .then(res => res.json())
+        const result = await fetchWord(id);
 
         const data = normalize(result, schema.word);
 
