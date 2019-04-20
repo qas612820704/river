@@ -8,6 +8,9 @@ export default function Dictionary({ dictionaryId }) {
     useCallback(
       state => {
         const dictionary = state.dictionaries[dictionaryId];
+
+        if (!dictionary) return undefined;
+
         return {
           ...dictionary,
           definations: dictionary.definations.map(
@@ -18,6 +21,11 @@ export default function Dictionary({ dictionaryId }) {
       [dictionaryId],
     ),
   );
+
+  if (!dictionary)
+      return (
+        <Spin />
+      )
 
   return (
     <List
