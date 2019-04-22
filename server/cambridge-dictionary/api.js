@@ -26,9 +26,9 @@ export async function fetchExplanationHTML(word, options = {}) {
 
   const language = (from !== to) ? `${from}-${to}` : from;
 
-  const response = await fetch(`${DOMAIN}/dictionary/${language}/${word}`, { redirect: 'manual' });
+  const response = await fetch(`${DOMAIN}/dictionary/${language}/${word}`);
 
-  if (isRedirect(response.status)) throw new WordNotFound(word);
+  if (isRedirect(response, language)) throw new WordNotFound(word);
 
   if (!response.ok) throw new CambridgeFetchError('Fail when getDictionaryHTML.');
 
@@ -52,6 +52,8 @@ export default {
   fetchExplanationHTML,
 };
 
-function isRedirect(code) {
-  return code > 300 && code < 400;
+function isRedirect(response, language) {
+  const isRedirectToIndex = response.url === `${DOMAIN}/dictionary/${language}/`;
+  const isRedirectToSpellCheck = response.url.includes(`${DOMAIN}/spellcheck/${language}/`);
+  return isRedirectToIndex || isRedirectToSpellCheck;
 }
