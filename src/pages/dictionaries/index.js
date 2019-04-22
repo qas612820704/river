@@ -8,6 +8,17 @@ import  Dictionary from './dictionary';
 import { addDictionary as reduxAddDictionary, delDictionary as reduxDelDictionary } from '../../redux/actions';
 
 export default function Dictionaries() {
+  return (
+    <div>
+      <Router>
+        <DictionaryIndex path="/" />
+        <Dictionary path=":dictionaryId" />
+      </Router>
+    </div>
+  );
+}
+
+function DictionaryIndex() {
   const [newDictionaryName, setNewDictionaryName] = useState('');
   const dispatch = useDispatch();
   const addDictionary = useCallback(
@@ -16,7 +27,12 @@ export default function Dictionaries() {
       dispatch(reduxAddDictionary({ name: newDictionaryName }));
     },
     [newDictionaryName],
-  )
+  );
+
+  const dictionaries = useMappedState(
+    state => map(state.dictionaries),
+    [],
+  );
 
   return (
     <div>
@@ -28,27 +44,11 @@ export default function Dictionaries() {
         suffix={<Icon onClick={addDictionary} type='plus'/>}
         style={{ marginBottom: '2em' }}
       />
-      <Router>
-        <DictionaryIndex path="/" />
-        <Dictionary path=":dictionaryId" />
-      </Router>
-    </div>
-  );
-}
-
-function DictionaryIndex() {
-  const dictionaries = useMappedState(
-    state => map(state.dictionaries),
-    [],
-  );
-
-  return (
-    <div>
-    <List
-      grid={{ gutter: 16, column: 4 }}
-      dataSource={dictionaries}
-      renderItem={dictionary => <DictionaryCard dictionary={dictionary} />}
-    />
+      <List
+        grid={{ gutter: 16, column: 4 }}
+        dataSource={dictionaries}
+        renderItem={dictionary => <DictionaryCard dictionary={dictionary} />}
+      />
     </div>
   );
 }
