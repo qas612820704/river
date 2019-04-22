@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Router, Link, navigate } from '@reach/router';
+import { BaseRouter, Link, navigate } from './lib/router';
 import { Layout, Input, AutoComplete, Avatar, Menu, Icon } from 'antd';
 import Words from './pages/words';
 import Word from './pages/words/word';
@@ -12,14 +12,14 @@ const { Header ,Content, Sider } = Layout;
 
 export default function App() {
   return (
-    <Router basepath="/river">
+    <BaseRouter>
       <Main path="/">
         <Words path="words">
           <Word path=":wordId"/>
         </Words>
         <Dictionaries path="dictionaries/*" />
       </Main>
-    </Router>
+    </BaseRouter>
   );
 };
 

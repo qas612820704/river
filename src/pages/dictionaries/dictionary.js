@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useMappedState } from 'redux-react-hook';
-import { Link } from '@reach/router';
-import { List, Card, Badge } from 'antd';
+import { Link } from '../../lib/router';
+import { List, Card, Badge, Spin } from 'antd';
 
 export default function Dictionary({ dictionaryId }) {
   const dictionary = useMappedState(
