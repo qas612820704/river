@@ -4,8 +4,7 @@ import {
   Link as ReachLink,
   navigate as reachNavigate } from '@reach/router';
 
-// const isDevelopment = process.env.NODE_ENV === 'development';
-const isDevelopment = false;
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const basepath = isDevelopment ? '/' : '/river';
 
